@@ -8,36 +8,62 @@ import com.example.applicationwithmvvm.network.SharedPreferencesRepository
 class MainViewModel(private val pref: SharedPreferencesRepository) : ViewModel() {
 
     val name = MutableLiveData<String>()
-    val year = MutableLiveData("")
-    val times = MutableLiveData("")
+    private val isNameCorrect = MutableLiveData(false)
+
+    val year = MutableLiveData<String?>()
+    private val isYearCorrect = MutableLiveData(false)
+
+    val times = MutableLiveData<String?>()
+    private val isTimesCorrect = MutableLiveData(false)
 
     private val _result = MutableLiveData("")
     val result: LiveData<String> = _result
 
     val isVisibleDialog = MutableLiveData<Boolean>()
     val isSuccessfulSavedData = MutableLiveData<Boolean>()
+    val isEnableButton = MutableLiveData(false)
+
+    init {
+        name.observeForever {
+            if (it.isNullOrBlank() || it.length <= 3) {
+                settingsForEditText(
+                    "Field `name` cannot be empty and more than three characters!",
+                    isNameCorrect
+                )
+            } else {
+                isNameCorrect.value = true
+                _result.value = ""
+            }
+
+            checkFields()
+        }
+
+        year.observeForever {
+            if (it.isNullOrBlank()) {
+                settingsForEditText("Field `year` cannot be empty !", isYearCorrect)
+            } else if (it.toInt() < 1000 || it.toInt() > 2000) {
+                settingsForEditText("Field `year` must be from 1000 to 2000!", isYearCorrect)
+            } else {
+                isYearCorrect.value = true
+                _result.value = ""
+            }
+
+            checkFields()
+
+        }
+
+        times.observeForever {
+            if (it.isNullOrBlank()) {
+                settingsForEditText("Field `times` cannot be empty!", isTimesCorrect)
+            } else {
+                isTimesCorrect.value = true
+                _result.value = ""
+            }
+            checkFields()
+        }
+    }
 
     fun save() {
-        if (name.value.isNullOrBlank()) {
-            setTextAndTextColor("Field `name` cannot be empty or null!")
-            return
-        }
-
-        if (year.value.isNullOrBlank()) {
-            setTextAndTextColor("Field `year` cannot be empty or null!")
-            return
-        }
-
-        if ((year.value?.toInt() ?: 0) < 1000 || (year.value?.toInt() ?: 0) > 2000) {
-            setTextAndTextColor("Field `year` must be from 1000 to 2000!")
-            return
-        }
-
-        if (times.value.isNullOrBlank()) {
-            setTextAndTextColor("Field `times` cannot be empty or null!")
-            return
-        }
-
         saveInfo("name = ${name.value}; year = ${year.value}; times = ${times.value}")
         _result.value = "Successfully"
         isSuccessfulSavedData.value = true
@@ -62,9 +88,18 @@ class MainViewModel(private val pref: SharedPreferencesRepository) : ViewModel()
         pref.info = infoLikeStr
     }
 
-    private fun setTextAndTextColor(value: String) {
+    private fun settingsForEditText(value: String, liveData: MutableLiveData<Boolean>) {
         _result.value = value
         isSuccessfulSavedData.value = false
+        liveData.value = false
+        isEnableButton.value = false
+    }
+
+    private fun checkFields() {
+        if (isNameCorrect.value == true && isYearCorrect.value == true && isTimesCorrect.value == true) {
+            isEnableButton.value = true
+            _result.value = ""
+        }
     }
 
 }

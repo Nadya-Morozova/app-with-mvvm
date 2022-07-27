@@ -76,6 +76,7 @@
             android:layout_marginEnd="16dp"
             android:onClick="@{() -> viewModel.save()}"
             android:text="Save"
+            android:enabled="@{viewModel.isEnableButton}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btnSwipe"
             app:layout_constraintTop_toBottomOf="@+id/etTimes" />

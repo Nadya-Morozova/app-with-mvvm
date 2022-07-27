@@ -27,10 +27,13 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        showDialog()
+        if (savedInstanceState == null) {
+            initDialogListener()
+        }
+
     }
 
-    private fun showDialog() {
+    private fun initDialogListener() {
         viewModel.isVisibleDialog.observe(this) {
             if (it == true) {
                 MainDialog().show(supportFragmentManager, "")
