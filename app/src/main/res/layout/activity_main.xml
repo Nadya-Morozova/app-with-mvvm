@@ -93,21 +93,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnSwipe" />
 
-        <TextView
-            android:id="@+id/tvData"
+<!--        <TextView-->
+<!--            android:id="@+id/tvData"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            android:text="@{viewModel.result}"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textSize="20sp"-->
+<!--            app:changeColor="@{viewModel.isSuccessfulSavedData}"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/btnLoad"-->
+<!--            tools:text="Result" />-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvWords"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{viewModel.result}"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:changeColor="@{viewModel.isSuccessfulSavedData}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnLoad"
-            tools:text="Result" />
+            app:layout_constraintTop_toBottomOf="@+id/btnLoad" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

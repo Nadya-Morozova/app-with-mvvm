@@ -11,8 +11,13 @@ class MainViewModel(private val pref: SharedPreferencesRepository) : ViewModel()
     val year = MutableLiveData("")
     val times = MutableLiveData("")
 
-    private val _result = MutableLiveData("")
-    val result: LiveData<String> = _result
+//    private val _result = MutableLiveData("")
+//    val result: LiveData<String> = _result
+
+    private val _result = MutableLiveData<List<String>?>()
+    val result: LiveData<List<String>?> = _result
+
+    private val listOfWords = mutableListOf<String>()
 
     val isVisibleDialog = MutableLiveData<Boolean>()
     val isSuccessfulSavedData = MutableLiveData<Boolean>()
@@ -39,7 +44,8 @@ class MainViewModel(private val pref: SharedPreferencesRepository) : ViewModel()
         }
 
         saveInfo("name = ${name.value}; year = ${year.value}; times = ${times.value}")
-        _result.value = "Successfully"
+        listOfWords.add("Successfully")
+        _result.value = listOfWords
         isSuccessfulSavedData.value = true
         isVisibleDialog.value = true
     }
@@ -54,7 +60,8 @@ class MainViewModel(private val pref: SharedPreferencesRepository) : ViewModel()
     }
 
     fun loadInfo() {
-        _result.value = pref.info
+        listOfWords.add(pref.info ?: "")
+        _result.value = listOfWords
         isSuccessfulSavedData.value = true
     }
 
@@ -63,7 +70,8 @@ class MainViewModel(private val pref: SharedPreferencesRepository) : ViewModel()
     }
 
     private fun setTextAndTextColor(value: String) {
-        _result.value = value
+        listOfWords.add(value)
+        _result.value = listOfWords
         isSuccessfulSavedData.value = false
     }
 

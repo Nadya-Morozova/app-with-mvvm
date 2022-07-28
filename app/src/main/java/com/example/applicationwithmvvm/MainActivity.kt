@@ -4,16 +4,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.applicationwithmvvm.databinding.ActivityMainBinding
 import com.example.applicationwithmvvm.network.SharedPreferencesRepository
 import com.example.applicationwithmvvm.viewmodel.MainViewModel
 import com.example.applicationwithmvvm.viewmodel.MainViewModelFactory
+import com.example.applicationwithmvvm.views.adapters.WordsAdapter
 import com.example.applicationwithmvvm.views.dialogs.MainDialog
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
+    private var adapter = WordsAdapter(listOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,14 +30,27 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        showDialog()
+        initDialogListener()
+        initRecyclerView()
     }
 
-    private fun showDialog() {
+    private fun initDialogListener() {
         viewModel.isVisibleDialog.observe(this) {
             if (it == true) {
                 MainDialog().show(supportFragmentManager, "")
             }
+        }
+    }
+
+    private fun initRecyclerView() {
+        viewModel.result.observe(this) {
+            adapter.update(it ?: mutableListOf())
+            binding.apply {
+                rvWords.adapter = adapter
+                rvWords.layoutManager =
+                    LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, true)
+            }
+
         }
     }
 
