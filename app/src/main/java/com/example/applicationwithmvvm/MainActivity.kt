@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
-    private var adapter = WordsAdapter(listOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +29,9 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        initDialogListener()
-        initRecyclerView()
+        if (savedInstanceState == null) {
+            initDialogListener()
+        }
     }
 
     private fun initDialogListener() {
@@ -39,18 +39,6 @@ class MainActivity : AppCompatActivity() {
             if (it == true) {
                 MainDialog().show(supportFragmentManager, "")
             }
-        }
-    }
-
-    private fun initRecyclerView() {
-        viewModel.result.observe(this) {
-            adapter.update(it ?: mutableListOf())
-            binding.apply {
-                rvWords.adapter = adapter
-                rvWords.layoutManager =
-                    LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, true)
-            }
-
         }
     }
 
